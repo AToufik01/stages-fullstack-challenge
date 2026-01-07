@@ -67,13 +67,12 @@ class ArticleController extends Controller
     public function search(Request $request)
     {
         $query = $request->input('q');
-
         if (!$query) {
             return response()->json([]);
         }
 
         $articles = DB::select(
-            "SELECT * FROM articles WHERE title LIKE '%" . $query . "%'"
+            "SELECT * FROM articles WHERE title LIKE ? COLLATE utf8_general_ci",["%{$query}%"]
         );
 
         $results = array_map(function ($article) {
