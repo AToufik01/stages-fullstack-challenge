@@ -24,7 +24,7 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        if ($user->password !== $credentials['password']) {
+        if (!Hash::check($credentials['password'],$user->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
@@ -48,11 +48,11 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
         ]);
-
+        $hashedPassword = Hash::make($validated['password']);
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => $validated['password'],
+            'password' => $hashedPassword,
         ]);
 
         return response()->json([
@@ -61,6 +61,7 @@ class AuthController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+
             ],
         ], 201);
     }
