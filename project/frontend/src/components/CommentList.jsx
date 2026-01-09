@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getComments, createComment, deleteComment } from '../services/api';
+import DOMPurify from 'dompurify';
 
 function CommentList({ articleId }) {
   const [comments, setComments] = useState([]);
@@ -77,14 +78,12 @@ function CommentList({ articleId }) {
               }}
             >
               <div 
-                dangerouslySetInnerHTML={{ __html: comment.content }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comment.content,{ ALLOWED_TAGS: [], ALLOWED_ATTR: [] })}}
                 style={{ marginBottom: '0.5rem' }}
               />
-              
               <div style={{ fontSize: '0.85em', color: '#7f8c8d' }}>
                 — {comment.user?.name || 'Utilisateur'}
               </div>
-
               <button
                 onClick={() => handleDelete(comment.id)}
                 style={{
