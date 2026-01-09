@@ -71,11 +71,8 @@ class ArticleController extends Controller
             return response()->json([]);
         }
 
-        // $articles = DB::select(
-        //     "SELECT * FROM articles WHERE title LIKE ? COLLATE utf8_general_ci",["%{$query}%"]
-        // );
         $articles = Article::where('title', 'LIKE', "%{$query}%")->get();
-
+        
         $results = $articles->map(function ($article) {
             return [
                 'id' => $article->id,
