@@ -71,11 +71,11 @@ class ArticleController extends Controller
             return response()->json([]);
         }
 
-        $articles = DB::select(
-            "SELECT * FROM articles WHERE title LIKE ? COLLATE utf8_general_ci",["%{$query}%"]
-        );
-
-        $results = array_map(function ($article) {
+        $articles = Article::whereRaw(
+            "CONVERT(title USING utf8) LIKE ?",
+            ["%{$query}%"]
+        )->get();
+        $results = $articles->map(function ($article) {
             return [
                 'id' => $article->id,
                 'title' => $article->title,
