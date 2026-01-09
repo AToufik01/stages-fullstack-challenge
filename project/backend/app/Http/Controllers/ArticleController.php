@@ -71,10 +71,8 @@ class ArticleController extends Controller
             return response()->json([]);
         }
 
-        $articles = Article::whereRaw(
-            "CONVERT(title USING utf8) LIKE ?",
-            ["%{$query}%"]
-        )->get();
+        $articles = Article::where('title', 'LIKE', "%{$query}%")->get();
+        
         $results = $articles->map(function ($article) {
             return [
                 'id' => $article->id,
