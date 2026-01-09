@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Models\Article;
 use Illuminate\Http\Request;
-
+use Purifier;
 class CommentController extends Controller
 {
     /**
@@ -31,7 +31,7 @@ class CommentController extends Controller
             'user_id' => 'required|exists:users,id',
             'content' => 'required|string',
         ]);
-
+        $validated['content'] = Purifier::clean($validated['content']);
         $comment = Comment::create($validated);
         $comment->load('user');
 
